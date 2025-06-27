@@ -36,19 +36,12 @@ const userSchema = new mongoose.Schema({
 });
 
 userSchema.methods.generateAuthToken = function () {
-    const token = jwt.sign(
-        { userId: this._id },
-        jwt_token,
-        { expiresIn: '1h' }
-    );
+    const token = jwt.sign({ _id: this._id }, process.env.JWT_SECRET, { expiresIn: '24h' });
     return token;
 }
-userSchema.comparePassword = async function (candidatePassword) {
-    const isMatch = await bcrypt.compare(candidatePassword, this.password);
-    if (!isMatch) {
-        throw new Error('Invalid password');
-    }
-    return isMatch;
+
+userSchema.methods.comparePassword = async function (password) {
+    return await bcrypt.compare(password, this.password);
 }
 
 userSchema.statics.hashPassword = async function (password) {
