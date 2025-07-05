@@ -106,7 +106,7 @@ const Home = () => {
     <div className='h-screen relative overflow-hidden'>
       <img className='w-16 absolute left-5 top-5' src="https://www.pngplay.com/wp-content/uploads/8/Uber-Transparent-Background.png" alt="Ubar logo" />
       <div className='h-screen w-screen'>
-        <img className='h-full w-full object-cover'src="https://cdn.theatlantic.com/thumbor/lbZRyomRR9jj98IyP6qPKjaKYqQ=/0x48:1231x740/720x405/media/img/mt/2017/04/IMG_7105/original.png" alt="Map"/>
+        <img className='h-full w-full object-cover'src="https://miro.medium.com/v2/resize:fit:1400/0*gwMx05pqII5hbfmX.gif" alt="Map"/>
       </div>
       <div className='flex flex-col justify-end h-screen absolute top-0 w-full'>
         <div className='h-[30%] p-5 bg-white relative'>
@@ -153,7 +153,7 @@ const Home = () => {
          < LookingForDriver setVehicleFound={setVehicleFound} />
       </div>  
        <div ref={waitingForDriverRef} className='fixed w-full z-10 bottom-0  bg-white px-3 py-6 pt-12'>
-         < WaitingForDriver waitingForDriver={waitingForDriver} />
+         < WaitingForDriver setWaitingFoDriver={setWaitingFoDriver} />
       </div>  
     </div>
   )
