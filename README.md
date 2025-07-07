@@ -130,9 +130,6 @@ Gontobbo/
 
 - `GET /maps/get-coordinates?address=<address>` - Get coordinates for an address
 
-### Protected Routes
-
-Most routes require authentication via JWT token passed in the Authorization header.
 
 ## 🔧 Development
 
@@ -182,6 +179,9 @@ npm run build
 - CORS configuration for cross-origin requests
 
 
+## 📝 License
+
+This project is licensed under the ISC License.
 
 
 
