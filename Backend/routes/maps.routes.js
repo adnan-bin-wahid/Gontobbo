@@ -10,4 +10,10 @@ router.get('/get-coordinates',
     authMiddleware.authUser,
     mapController.getCoordinates);
 
+router.get('/get-distance-time',
+    query('origin').isString().isLength({ min: 3 }),
+    query('destination').isString().isLength({ min: 3 }),
+    authMiddleware.authUser,    
+    mapController.getDistanceAndTime);
+
 module.exports = router;
