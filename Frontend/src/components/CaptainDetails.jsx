@@ -9,7 +9,7 @@ const CaptainDetails = () => {
             <h4 className='text-lg font-medium'>Adnan Bin Wahid</h4>
           </div>
           <div>
-            <h4 className='text-xl font-semibold'>$250.50</h4>
+            <h4 className='text-xl font-semibold'>৳250.50</h4>
             <p className='text-sm text-gray-600'>Earned</p>
           </div>
          </div>
