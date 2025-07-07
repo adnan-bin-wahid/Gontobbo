@@ -43,7 +43,7 @@ const CaptainHome = () => {
   return (
     <div className='h-screen'>
       <div className='fixed p-6 top-0 flex items-center justify-between w-screen'>
-        <img className='w-16' src="https://www.pngplay.com/wp-content/uploads/8/Uber-Transparent-Background.png" alt="Uber logo"/>
+        <img className='w-16' src="https://www.pngplay.com/wp-content/uploads/8/Uber-Transparent-Background.png" alt="Uber logo change"/>
          <Link to='/captain-home' className='h-10 w-10 bg-white flex items-center justify-center rounded-full'>
             <i className="text-2xl font-bold ri-logout-box-r-line"></i>
         </Link>
