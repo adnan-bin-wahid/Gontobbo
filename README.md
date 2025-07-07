@@ -182,9 +182,6 @@ npm run build
 - CORS configuration for cross-origin requests
 
 
-## 📝 License
-
-This project is licensed under the ISC License.
 
 
 
