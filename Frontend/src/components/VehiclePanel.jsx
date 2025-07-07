@@ -17,7 +17,7 @@ export const VehiclePanel = (props) => {
           <p className='font-normal text-xs text-gray-600'>Affordable,compact and fast</p>
 
         </div>
-        <h2 className='text-lg font-semibold'>৳12.50</h2>
+        <h2 className='text-lg font-semibold'>৳ 12.50</h2>
         </div>
          <div onClick={()=>{
           props.setConfirmRidePanel(true)
@@ -29,7 +29,7 @@ export const VehiclePanel = (props) => {
           <p className='font-normal text-xs text-gray-600'>Affordable motorcycle rides</p>
 
         </div>
-        <h2 className='text-lg font-semibold'>৳8.50</h2>
+        <h2 className='text-lg font-semibold'>৳ 8.50</h2>
         </div>
          <div onClick={()=>{
           props.setConfirmRidePanel(true)
@@ -41,7 +41,7 @@ export const VehiclePanel = (props) => {
           <p className='font-normal text-xs text-gray-600'>Affordable auto rides</p>
 
         </div>
-        <h2 className='text-lg font-semibold'>৳10.50</h2>
+        <h2 className='text-lg font-semibold'>৳ 10.50</h2>
         </div>
     </div>
   )
