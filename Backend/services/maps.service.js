@@ -42,8 +42,14 @@ module.exports.getDistanceAndTime = async (origin, destination) => {
 
     const result = data.rows[0].elements[0];
     return {
-      distance: result.distance.text,
-      duration: result.duration.text
+      distance: {
+        text: result.distance.text,
+        value: result.distance.value
+      },
+      duration: {
+        text: result.duration.text,
+        value: result.duration.value
+      }
     };
 
   }catch (error) {
@@ -53,4 +59,31 @@ module.exports.getDistanceAndTime = async (origin, destination) => {
 
  
   
+}
+
+module.exports.getAutoCompleteSuggestions = async (input) => {
+ if(!input) {
+    return { error: 'query is required' };
+
+  }
+  const apiKey = process.env.GOOGLE_MAPS_API;
+  const url = `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${encodeURIComponent(input)}&key=${apiKey}`;
+  try{
+    const response = await axios.get(url);
+    if (response.status !== 200) {
+      throw new Error('Network response was not ok');
+    }
+    const data = response.data;
+
+    if (data.status !== 'OK') {
+      throw new Error(data.error_message || 'Failed to fetch suggestions');
+    }
+
+    return data.predictions;
+  
+
+  }catch (error) {
+    console.error('Error fetching autocomplete suggestions:', error);
+    return { error: 'Failed to fetch suggestions' };
+  }
 }

@@ -34,3 +34,25 @@ module.exports.getDistanceAndTime = async (req, res,next) => {
     return res.status(500).json({ message: 'Failed to fetch distance and time' });
   }
 }
+
+module.exports.getAutoCompleteSuggestions = async (req, res,next) => {
+ try{
+ const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+  
+  const { input } = req.query;
+  const suggestions = await mapService.getAutoCompleteSuggestions(input);
+  
+  if (suggestions.error) {
+    return res.status(400).json({ message: suggestions.error });
+  }
+  
+  return res.status(200).json(suggestions);
+
+ }catch (error) {
+    console.error('Error fetching auto-complete suggestions:', error);
+    return res.status(500).json({ message: 'Failed to fetch suggestions' });
+  }
+}
