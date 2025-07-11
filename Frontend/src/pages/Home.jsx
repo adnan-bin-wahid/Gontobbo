@@ -25,6 +25,7 @@ const Home = () => {
   const [confirmRidePanel, setConfirmRidePanel] = useState(false)
   const [vehicleFound, setVehicleFound] = useState(false)
   const [waitingForDriver, setWaitingForDriver] = useState(false)
+  const [currentRide, setCurrentRide] = useState(null)
   
   // Add states for suggestions and active field
   const [suggestions, setSuggestions] = useState([])
@@ -259,6 +260,37 @@ const Home = () => {
     }
   }
 
+  async function createRide(vehicleType){
+    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/rides/create`, {
+      pickup,
+      destination,
+      vehicleType
+    }, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      
+      }
+    });
+    if (response.status === 201) {
+      console.log('Ride created successfully:', response.data);
+      setConfirmRidePanel(false);
+      setVehicleFound(true);
+      setWaitingForDriver(true);
+    }
+    else {
+      console.error('Failed to create ride:', response.data);
+      alert('Failed to create ride. Please try again.');
+    }
+  }
+
+  // Handle ride creation success
+  const handleRideCreated = (rideData) => {
+    console.log('Ride created and stored in state:', rideData);
+    setCurrentRide(rideData);
+    
+    // Any additional logic after ride creation
+    // For example, you might want to start polling for driver status
+  }
 
   return (
     <div className='h-screen relative overflow-hidden'>
@@ -337,6 +369,7 @@ const Home = () => {
           destination={destination}
           fare={fare}
           vehicleType={vehicleType}
+          onRideCreated={handleRideCreated}
          />
       </div>    
       <div ref={vehicleFoundRef} className='fixed w-full z-10 bottom-0 translate-y-full bg-white px-3 py-6 pt-12'>

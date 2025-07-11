@@ -1,6 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
+import axios from 'axios'
 
 export const ConfirmedRide = (props) => {
+  const [isCreating, setIsCreating] = useState(false);
+  
   // Get vehicle image based on selected type
   const getVehicleImage = () => {
     switch(props.vehicleType) {
@@ -21,6 +24,60 @@ export const ConfirmedRide = (props) => {
       return props.fare[props.vehicleType] || 'N/A';
     }
     return props.fare;
+  };
+  
+  // Handle ride creation
+  const createRide = async () => {
+    if (!props.pickup || !props.destination || !props.vehicleType) {
+      console.error('Missing required information for ride creation');
+      alert('Missing ride information. Please try again.');
+      return;
+    }
+    
+    try {
+      setIsCreating(true);
+      
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('Authentication token not found');
+      }
+      
+      const rideDetails = {
+        pickup: props.pickup,
+        destination: props.destination,
+        vehicleType: props.vehicleType
+      };
+      
+      console.log('Creating ride with details:', rideDetails);
+      
+      const response = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/rides/create`,
+        rideDetails,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+      
+      console.log('Ride created successfully:', response.data);
+      
+      // Show the looking for driver panel
+      props.setVehicleFound(true);
+      props.setConfirmRidePanel(false);
+      
+      // Save ride details if needed for later use
+      if (props.onRideCreated) {
+        props.onRideCreated(response.data);
+      }
+      
+    } catch (error) {
+      console.error('Failed to create ride:', error);
+      alert('Unable to create ride. Please try again.');
+    } finally {
+      setIsCreating(false);
+    }
   };
   
   return (
@@ -55,10 +112,13 @@ export const ConfirmedRide = (props) => {
               </div>
             </div>
           </div>
-          <button onClick={()=>{
-            props.setVehicleFound(true)
-            props.setConfirmRidePanel(false)
-          }} className='w-full mt-5 bg-green-600 text-white font-semibold p-2 rounded-lg' >Confirm</button>
+          <button 
+            onClick={createRide}
+            disabled={isCreating} 
+            className='w-full mt-5 bg-green-600 text-white font-semibold p-2 rounded-lg'
+          >
+            {isCreating ? 'Creating Ride...' : 'Confirm'}
+          </button>
         </div>
     </div>
   )
