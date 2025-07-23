@@ -11,7 +11,7 @@ const FinishRide = (props) => {
         <h3 className='text-2xl font-semibold mb-5'>Finish this Ride</h3>
         <div className="flex items-center justify-between p-4 border-2 border-yellow-300 rounded-lg mt-4">
             <div className="flex items-center gap-3">
-                <img className="h-12 rounded-full object-cover w-12" src="https://scontent.fdac5-2.fna.fbcdn.net/v/t39.30808-6/490515450_10234936738175391_9193044080154651462_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeEjBqhcH66UjE4GmFT__m45X-1MOlCovltf7Uw6UKi-W0CGUt9tB0MNROR1g6Aj_ZXfAvaWx_woeVjkuCbmrOZa&_nc_ohc=7WpoVJ2guy0Q7kNvwHM_b6b&_nc_oc=AdkOonvb0V-69UDf-O8g5hqV3CggFeZ_bD71m_7pDKWBLy-riKyTP5u9FIsaOI9uRLc&_nc_zt=23&_nc_ht=scontent.fdac5-2.fna&_nc_gid=s9Pt89hBoeDebjgEZxN1Tg&oh=00_AfQ1OYRaq6o6w1GYH2N96ijrQ8iIj_7m6fhi_bGEKEVBVg&oe=686F2C6B" alt="User's picture"/>
+                <img className="h-12 rounded-full object-cover w-12" src="https://images.unsplash.com/photo-1494790108755-2616b612b47c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="User's picture"/>
                 <h2 className="text-lg font-medium">Meher Afroj Shaon</h2>
             </div>
             <h5 className="text-lg font-semibold">2.2 KM</h5>

@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react'
+import React, { useRef, useEffect, useContext } from 'react'
  import { useState } from 'react'
  import {useGSAP} from '@gsap/react';
  import { gsap } from 'gsap';
@@ -9,6 +9,8 @@ import { ConfirmedRide } from '../components/ConfirmedRide';
 import LookingForDriver from '../components/LookingForDriver';
 import WaitingForDriver from '../components/WaitingForDriver';
 import axios from 'axios';
+import { UserDataContext } from '../context/UserContext';
+import { SocketContext } from '../context/SocketContext';
 
 const Home = () => {
   const [pickup, setPickup] = useState('')
@@ -33,7 +35,33 @@ const Home = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [fare, setFare] = useState({});
   const [vehicleType, setVehicleType] = useState(null); // To track selected vehicle type
+  const [ride,setRide] = useState(null); // To track the ride data
   // Function to fetch suggestions
+  const {socket} = useContext(SocketContext);
+  const {user} = useContext(UserDataContext)
+
+  useEffect(() => {
+    socket.emit("join", {
+      userType: 'user',
+      userId: user._id,
+    });
+  }, [user]);
+
+  socket.on('ride-confirmed', ride => {
+
+
+        setVehicleFound(false)
+        setWaitingForDriver(true)
+        setRide(ride)
+    })
+
+     socket.on('ride-started', ride => {
+        console.log("ride")
+        setWaitingForDriver(false)
+        navigate('/riding', { state: { ride } }) // Updated navigate to include ride data
+    })
+
+
   const fetchSuggestions = async (input, field) => {
     if (input.length < 3) {
       setSuggestions([]);
@@ -90,6 +118,37 @@ const Home = () => {
     setPanelOpen(false);
     setVehiclePanel(true);
   };
+
+   const handlePickupChange = async (e) => {
+        setPickup(e.target.value)
+        try {
+            const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/maps/get-suggestions`, {
+                params: { input: e.target.value },
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                }
+
+            })
+            setPickupSuggestions(response.data)
+        } catch {
+            // handle error
+        }
+    }
+
+    const handleDestinationChange = async (e) => {
+        setDestination(e.target.value)
+        try {
+            const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/maps/get-suggestions`, {
+                params: { input: e.target.value },
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                }
+            })
+            setDestinationSuggestions(response.data)
+        } catch {
+            // handle error
+        }
+    }
   
   const submitHandler = (e) => {
     e.preventDefault();
@@ -370,7 +429,9 @@ const Home = () => {
           fare={fare}
           vehicleType={vehicleType}
           onRideCreated={handleRideCreated}
-         />
+         
+          />
+         
       </div>    
       <div ref={vehicleFoundRef} className='fixed w-full z-10 bottom-0 translate-y-full bg-white px-3 py-6 pt-12'>
          <LookingForDriver 
@@ -382,7 +443,12 @@ const Home = () => {
          />
       </div>  
        <div ref={waitingForDriverRef} className='fixed w-full z-10 bottom-0 bg-white px-3 py-6 pt-12'>
-         <WaitingForDriver setWaitingForDriver={setWaitingForDriver} />
+         <WaitingForDriver 
+         ride={ride}
+         setVehicleFound={setVehicleFound}
+         setWaitingForDriver={setWaitingForDriver}
+         waitingForDriver={waitingForDriver}
+         />
       </div>  
     </div>
   )

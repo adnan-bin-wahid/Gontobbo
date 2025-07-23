@@ -4,12 +4,12 @@ const mongoose = require('mongoose');
 const rideSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
+        ref: 'User',  // Changed from 'user' to 'User' to match the registered model name
         required: true
     },
     captain: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Captain',
+        ref: 'captain',
       
     },
     pickUp: {

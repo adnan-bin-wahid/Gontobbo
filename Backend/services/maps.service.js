@@ -1,4 +1,6 @@
 const axios = require('axios');
+const { listIndexes } = require('../models/user.model');
+const captainModel = require('../models/captain.model');
 
 module.exports.getAddressCoordinates = async (address) => {
     const apiKey = process.env.GOOGLE_MAPS_API;
@@ -9,7 +11,7 @@ module.exports.getAddressCoordinates = async (address) => {
         if (response.data.status === 'OK') {
             const location = response.data.results[0].geometry.location;
             return {
-                lat: location.lat,
+                ltd: location.lat,
                 lng: location.lng
             };
         } else {
@@ -86,4 +88,33 @@ module.exports.getAutoCompleteSuggestions = async (input) => {
     console.error('Error fetching autocomplete suggestions:', error);
     return { error: 'Failed to fetch suggestions' };
   }
+}
+
+module.exports.getCaptainsInTheRadius = async (ltd, lng, radius) => {
+  // Since the location is stored as separate ltd/lng fields, we'll use a different approach
+  // Convert radius from km to degrees (approximately)
+  const radiusInDegrees = radius / 111; // 1 degree ≈ 111 km
+  
+  const captains = await captainModel.find({
+    // Check if captain has location data
+    'location.ltd': { $exists: true, $ne: null },
+    'location.lng': { $exists: true, $ne: null },
+    // Simple bounding box query (not as accurate as geospatial but will work)
+    'location.ltd': {
+      $gte: ltd - radiusInDegrees,
+      $lte: ltd + radiusInDegrees
+    },
+    'location.lng': {
+      $gte: lng - radiusInDegrees,
+      $lte: lng + radiusInDegrees
+    },
+    // Only include captains with socketId and active status
+    socketId: { $exists: true, $ne: null },
+    status: 'active'
+  });
+  
+  console.log(`Searching for captains near [${lng}, ${ltd}] with radius ${radius}km`);
+  console.log(`Found ${captains.length} active captains with socketId`);
+  
+  return captains; 
 }

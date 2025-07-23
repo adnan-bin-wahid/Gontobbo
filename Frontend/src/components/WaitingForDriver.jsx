@@ -10,9 +10,17 @@ const WaitingForDriver = (props) => {
        <div className='flex items-center justify-between'>
             <img className='h-12' src="https://www.uber-assets.com/image/upload/f_auto,q_auto:eco,c_fill,h_538,w_956/v1688398986/assets/90/34c200-ce29-49f1-bf35-e9d250e8217a/original/UberX.png"></img>
             <div className='text-right'>
-              <h2 className='text-lg font-medium'>Adnan Bin Wahid</h2>
-              <h4 className='text-xl font-semibold -mt-1 -mb-1'>MP04 AB 1234</h4>
-              <p className='text-sm text-gray-600'>Maruti Suzuki Alto</p>
+              <h2 className='text-lg font-medium'>
+                {props.ride?.captain?.fullname?.firstname || 'Driver'} {props.ride?.captain?.fullname?.lastname || ''}
+              </h2>
+              <h4 className='text-xl font-semibold -mt-1 -mb-1'>
+                {props.ride?.captain?.vehicle?.plate || 'Vehicle info loading...'}
+              </h4>
+              <p className='text-sm text-gray-600'>
+                {props.ride?.captain?.vehicle?.color && props.ride?.captain?.vehicle?.vehicleType 
+                  ? `${props.ride.captain.vehicle.color} ${props.ride.captain.vehicle.vehicleType}` 
+                  : 'Vehicle details loading...'}
+              </p>
             </div>
        </div>
 
@@ -22,22 +30,22 @@ const WaitingForDriver = (props) => {
             <div className='flex items-center gap-5 p-3 border-b-2'>
               <i className="ri-map-pin-2-fill"></i>
               <div>
-                <h3 className='text-lg font-medium'>Doyel Chattar, University of Dhaka</h3>
-                <p className='text-sm -mt-1 text-gray-600'>Shahbag, Dhaka</p>
+                <h3 className='text-lg font-medium'>{props.ride?.pickUp}</h3>
+                <p className='text-sm -mt-1 text-gray-600'>Pickup location</p>
               </div>
             </div>
             <div className='flex items-center gap-5 p-3 border-b-2'>
               <i className="ri-map-pin-line"></i>
               <div>
-                <h3 className='text-lg font-medium'>Doyel Chattar, University of Dhaka</h3>
-                <p className='text-sm -mt-1 text-gray-600'>Shahbag, Dhaka</p>
+                <h3 className='text-lg font-medium'>{props.ride?.destination}</h3>
+                <p className='text-sm -mt-1 text-gray-600'>Destination location</p>
               </div>
             </div>
             <div className='flex items-center gap-5 p-3'>
               <i className="ri-cash-fill"></i>
               <div>
-                <h3 className='text-lg font-medium'>$12.50</h3>
-                <p className='text-sm -mt-1 text-gray-600'>Cash cash</p>
+                <h3 className='text-lg font-medium'>{props.ride?.fare}</h3>
+                <p className='text-sm -mt-1 text-gray-600'>Cash</p>
               </div>
             </div>
           </div>
