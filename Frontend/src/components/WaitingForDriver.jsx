@@ -21,6 +21,7 @@ const WaitingForDriver = (props) => {
                   ? `${props.ride.captain.vehicle.color} ${props.ride.captain.vehicle.vehicleType}` 
                   : 'Vehicle details loading...'}
               </p>
+              <h1 className='text-lg font-bold'>OTP : {props.ride?.otp}</h1>
             </div>
        </div>
 
@@ -44,7 +45,7 @@ const WaitingForDriver = (props) => {
             <div className='flex items-center gap-5 p-3'>
               <i className="ri-cash-fill"></i>
               <div>
-                <h3 className='text-lg font-medium'>{props.ride?.fare}</h3>
+                <h3 className='text-lg font-medium'>৳ {props.ride?.fare}</h3>
                 <p className='text-sm -mt-1 text-gray-600'>Cash</p>
               </div>
             </div>

@@ -1,14 +1,33 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const ConfirmRidePopUp = (props) => {
 
   const[otp, setOtp] = useState('')
+  const navigate = useNavigate();
 
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
     // Add your OTP validation or submission logic here
+       const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/rides/start-ride`, {
+            params: {
+                rideId: props.ride._id,
+                otp: otp
+            },
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+        })
+
+        if (response.status === 200) {
+            props.setConfirmRidePopupPanel(false)
+            props.setRidePopupPanel(false)
+            navigate('/captain-riding', { state: { ride: props.ride } })
+        }
+
   };
   
   return (
@@ -21,7 +40,7 @@ const ConfirmRidePopUp = (props) => {
         <div className="flex items-center justify-between p-3 bg-yellow-300 rounded-lg mt-4">
             <div className="flex items-center gap-3">
                 <img className="h-12 rounded-full object-cover w-12" src="https://images.unsplash.com/photo-1494790108755-2616b612b47c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="User's picture"/>
-                <h2 className="text-lg font-medium">Meher Afroj Shaon</h2>
+                <h2 className="text-lg font-medium capitalize">{props.ride?.user.fullname.firstname} {props.ride?.user.fullname.lastname}</h2>
             </div>
             <h5 className="text-lg font-semibold">2.2 KM</h5>
         </div>
@@ -32,21 +51,21 @@ const ConfirmRidePopUp = (props) => {
             <div className='flex items-center gap-5 p-3 border-b-2'>
               <i className="ri-map-pin-2-fill"></i>
               <div>
-                <h3 className='text-lg font-medium'>108/A, MohammadPur</h3>
-                <p className='text-sm -mt-1 text-gray-600'>Dhaka</p>
+                <h3 className='text-lg font-medium'>{props.ride?.pickUp}</h3>
+                <p className='text-sm -mt-1 text-gray-600'>Pickup location</p>
               </div>
             </div>
             <div className='flex items-center gap-5 p-3 border-b-2'>
               <i className="ri-map-pin-line"></i>
               <div>
-                <h3 className='text-lg font-medium'>Doyel Chattar, University of Dhaka</h3>
-                <p className='text-sm -mt-1 text-gray-600'>Shahbag, Dhaka</p>
+                <h3 className='text-lg font-medium'>{props.ride?.destination}</h3>
+                <p className='text-sm -mt-1 text-gray-600'>Destination location</p>
               </div>
             </div>
             <div className='flex items-center gap-5 p-3'>
               <i className="ri-cash-fill"></i>
               <div>
-                <h3 className='text-lg font-medium'>৳ 12.50</h3>
+                <h3 className='text-lg font-medium'>৳ {props.ride?.fare}</h3>
                 <p className='text-sm -mt-1 text-gray-600'>Cash cash</p>
               </div>
             </div>
@@ -55,11 +74,27 @@ const ConfirmRidePopUp = (props) => {
          <div className='mt-6 w-full'>
           <form onSubmit={(e)=>{
             submitHandler(e)
-          }}>
-             <input value={otp} onChange={(e)=>setOtp(e.target.value)} type="text"  className='bg-[#eee] font-mono px-6 py-4 text-base rounded-lg w-full mt-5' placeholder='Enter OTP'/>
-             <Link to='/captain-riding' className='w-full mt-5 text-lg flex justify-center bg-green-600 text-white font-semibold p-3 rounded-lg' >Confirm</Link>
-
-          <button onClick={()=>{
+            // Start live tracking when ride is confirmed
+            if (props.startLiveTracking) {
+              props.startLiveTracking(props.ride._id);
+            }
+            }}>
+            <input
+              value={otp}
+              onChange={(e) => setOtp(e.target.value)}
+              type="text"
+              className="bg-[#eee] font-mono px-6 py-4 text-base rounded-lg w-full mt-5"
+              placeholder="Enter OTP"
+              required
+            />
+            <button
+              type="submit"
+              className="w-full mt-5 text-lg flex justify-center bg-green-600 text-white font-semibold p-3 rounded-lg"
+            >
+              Confirm
+            </button>
+            
+            <button onClick={() => {
              props.setConfirmRidePopupPanel(false)
              props.setRidePopupPanel(false)
              

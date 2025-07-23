@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useContext } from 'react'
  import { useState } from 'react'
+ import { useNavigate } from 'react-router-dom'
  import {useGSAP} from '@gsap/react';
  import { gsap } from 'gsap';
  import 'remixicon/fonts/remixicon.css'
@@ -11,6 +12,7 @@ import WaitingForDriver from '../components/WaitingForDriver';
 import axios from 'axios';
 import { UserDataContext } from '../context/UserContext';
 import { SocketContext } from '../context/SocketContext';
+import LiveTracking from '../components/LiveTracking';
 
 const Home = () => {
   const [pickup, setPickup] = useState('')
@@ -22,6 +24,7 @@ const Home = () => {
   const panelCloseRef = useRef(null);
   const vehicleFoundRef = useRef(null);
   const waitingForDriverRef = useRef(null);
+  const navigate = useNavigate();
 
   const [vehiclePanel, setVehiclePanel] = useState(false)
   const [confirmRidePanel, setConfirmRidePanel] = useState(false)
@@ -41,25 +44,35 @@ const Home = () => {
   const {user} = useContext(UserDataContext)
 
   useEffect(() => {
-    socket.emit("join", {
-      userType: 'user',
-      userId: user._id,
-    });
-  }, [user]);
+    if (user && user._id) {
+      socket.emit("join", {
+        userType: 'user',
+        userId: user._id,
+      });
+    }
 
-  socket.on('ride-confirmed', ride => {
+    // Set up socket event listeners
+    const handleRideConfirmed = (ride) => {
+      setVehicleFound(false)
+      setWaitingForDriver(true)
+      setRide(ride)
+    }
 
+    const handleRideStarted = (ride) => {
+      console.log("ride started")
+      setWaitingForDriver(false)
+      navigate('/riding', { state: { ride } })
+    }
 
-        setVehicleFound(false)
-        setWaitingForDriver(true)
-        setRide(ride)
-    })
+    socket.on('ride-confirmed', handleRideConfirmed)
+    socket.on('ride-started', handleRideStarted)
 
-     socket.on('ride-started', ride => {
-        console.log("ride")
-        setWaitingForDriver(false)
-        navigate('/riding', { state: { ride } }) // Updated navigate to include ride data
-    })
+    // Cleanup function
+    return () => {
+      socket.off('ride-confirmed', handleRideConfirmed)
+      socket.off('ride-started', handleRideStarted)
+    }
+  }, [user, socket, navigate]);
 
 
   const fetchSuggestions = async (input, field) => {
@@ -118,37 +131,6 @@ const Home = () => {
     setPanelOpen(false);
     setVehiclePanel(true);
   };
-
-   const handlePickupChange = async (e) => {
-        setPickup(e.target.value)
-        try {
-            const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/maps/get-suggestions`, {
-                params: { input: e.target.value },
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem('token')}`
-                }
-
-            })
-            setPickupSuggestions(response.data)
-        } catch {
-            // handle error
-        }
-    }
-
-    const handleDestinationChange = async (e) => {
-        setDestination(e.target.value)
-        try {
-            const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/maps/get-suggestions`, {
-                params: { input: e.target.value },
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem('token')}`
-                }
-            })
-            setDestinationSuggestions(response.data)
-        } catch {
-            // handle error
-        }
-    }
   
   const submitHandler = (e) => {
     e.preventDefault();
@@ -355,7 +337,7 @@ const Home = () => {
     <div className='h-screen relative overflow-hidden'>
       <img className='w-16 absolute left-5 top-5' src="https://www.pngplay.com/wp-content/uploads/8/Uber-Transparent-Background.png" alt="Ubar logo" />
       <div className='h-screen w-screen'>
-        <img className='h-full w-full object-cover'src="https://miro.medium.com/v2/resize:fit:1400/0*gwMx05pqII5hbfmX.gif" alt="Map"/>
+       <LiveTracking/>
       </div>
       <div className='flex flex-col justify-end h-screen absolute top-0 w-full'>
         <div className='h-[30%] p-5 bg-white relative'>
