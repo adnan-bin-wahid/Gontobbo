@@ -39,7 +39,7 @@ const ConfirmRidePopUp = (props) => {
         <h3 className='text-2xl font-semibold mb-5'>Confirm this ride to start</h3>
         <div className="flex items-center justify-between p-3 bg-yellow-300 rounded-lg mt-4">
             <div className="flex items-center gap-3">
-                <img className="h-12 rounded-full object-cover w-12" src="https://images.unsplash.com/photo-1494790108755-2616b612b47c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="User's picture"/>
+                <img className="h-12 rounded-full object-cover w-12" src="https://www.iconpacks.net/icons/2/free-user-icon-3296-thumb.png" alt="User's picture"/>
                 <h2 className="text-lg font-medium capitalize">{props.ride?.user.fullname.firstname} {props.ride?.user.fullname.lastname}</h2>
             </div>
             <h5 className="text-lg font-semibold">2.2 KM</h5>

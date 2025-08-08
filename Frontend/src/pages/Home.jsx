@@ -3,6 +3,7 @@ import React, { useRef, useEffect, useContext } from 'react'
  import { useNavigate } from 'react-router-dom'
  import {useGSAP} from '@gsap/react';
  import { gsap } from 'gsap';
+ import Gontobbologo from '../assets/logo.png'
  import 'remixicon/fonts/remixicon.css'
 import LocationSearchPanel from '../components/LocationSearchPanel';
 import { VehiclePanel } from '../components/VehiclePanel';
@@ -335,7 +336,7 @@ const Home = () => {
 
   return (
     <div className='h-screen relative overflow-hidden'>
-      <img className='w-16 absolute left-5 top-5' src="https://www.pngplay.com/wp-content/uploads/8/Uber-Transparent-Background.png" alt="Ubar logo" />
+      <img className='w-28 absolute left-5 top-5' src={Gontobbologo} alt="Gontobbo logo" />
       <div className='h-screen w-screen'>
        <LiveTracking/>
       </div>
