@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom' // Added useLocation
 import { useEffect, useContext } from 'react'
 import { SocketContext } from '../context/SocketContext'
@@ -10,10 +10,50 @@ const Riding = () => {
     const { ride } = location.state || {} // Retrieve ride data
     const { socket } = useContext(SocketContext)
     const navigate = useNavigate()
+    const [isProcessingPayment, setIsProcessingPayment] = useState(false)
 
-    socket.on("ride-ended", () => {
-        navigate('/home')
-    })
+    // Debug: Log the props data
+    console.log('Riding - location:', location)
+    console.log('Riding - ride data:', ride)
+
+    useEffect(() => {
+        if (socket) {
+            socket.on("ride-ended", () => {
+                navigate('/home')
+            })
+
+            return () => {
+                socket.off("ride-ended")
+            }
+        }
+    }, [socket, navigate])
+
+    // Handle case where ride data is missing
+    if (!ride) {
+        return (
+            <div className='h-screen flex items-center justify-center'>
+                <div className='text-center'>
+                    <h3 className='text-xl font-semibold text-red-500'>No ride data found</h3>
+                    <p className='text-gray-600 mt-2'>Please go back and select a ride.</p>
+                    <Link to='/home' className='mt-4 inline-block bg-blue-500 text-white px-4 py-2 rounded'>
+                        Go to Home
+                    </Link>
+                </div>
+            </div>
+        )
+    }
+
+    const handleMakePayment = () => {
+        setIsProcessingPayment(true)
+        // Navigate to payment page with ride data
+        navigate('/payment', { 
+            state: { 
+                ride: ride,
+                amount: ride.fare,
+                rideId: ride._id 
+            } 
+        })
+    }
 
 
     return (
@@ -49,13 +89,23 @@ const Riding = () => {
                         <div className='flex items-center gap-5 p-3'>
                             <i className="ri-currency-line"></i>
                             <div>
-                                <h3 className='text-lg font-medium'>{ride?.fare} </h3>
+                                <h3 className='text-lg font-medium'>৳{ride?.fare} </h3>
                                 <p className='text-sm -mt-1 text-gray-600'>Cash</p>
                             </div>
                         </div>
                     </div>
                 </div>
-                <button className='w-full mt-5 bg-green-600 text-white font-semibold p-2 rounded-lg'>Make a Payment</button>
+                <button 
+                    onClick={handleMakePayment}
+                    disabled={isProcessingPayment}
+                    className={`w-full mt-5 font-semibold p-2 rounded-lg ${
+                        isProcessingPayment 
+                            ? 'bg-gray-400 text-gray-600 cursor-not-allowed' 
+                            : 'bg-green-600 text-white hover:bg-green-700'
+                    }`}
+                >
+                    {isProcessingPayment ? 'Processing...' : 'Make a Payment'}
+                </button>
             </div>
         </div>
     )

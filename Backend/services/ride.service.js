@@ -164,3 +164,59 @@ module.exports.endRide = async ({ rideId, captain }) => {
 
     return ride;
 }
+
+module.exports.endRideCaptain = async ({ rideId, captain }) => {
+    if (!rideId) {
+        throw new Error('Ride id is required');
+    }
+
+    const ride = await rideModel.findOne({
+        _id: rideId,
+        captain: captain._id
+    }).populate('user').populate('captain');
+
+    if (!ride) {
+        throw new Error('Ride not found');
+    }
+
+    if (ride.status !== 'ongoing') {
+        throw new Error('Ride not ongoing');
+    }
+
+    // Set status to indicate captain has finished but waiting for payment
+    await rideModel.findOneAndUpdate({
+        _id: rideId
+    }, {
+        status: 'completed-by-captain'
+    })
+
+    return ride;
+}
+
+module.exports.endRideUser = async ({ rideId, user }) => {
+    if (!rideId) {
+        throw new Error('Ride id is required');
+    }
+
+    const ride = await rideModel.findOne({
+        _id: rideId,
+        user: user._id
+    }).populate('user').populate('captain');
+
+    if (!ride) {
+        throw new Error('Ride not found');
+    }
+
+    if (ride.status !== 'completed-by-captain') {
+        throw new Error('Captain has not completed the ride yet');
+    }
+
+    // Final completion after payment
+    await rideModel.findOneAndUpdate({
+        _id: rideId
+    }, {
+        status: 'completed'
+    })
+
+    return ride;
+}

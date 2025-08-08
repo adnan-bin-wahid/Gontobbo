@@ -29,21 +29,23 @@ const FinishRide = (props) => {
     }
 
     async function endRide() {
-        const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/rides/end-ride`, {
+        try {
+            const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/rides/end-ride-captain`, {
+                rideId: props.ride._id
+            }, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                }
+            })
 
-            rideId: props.ride._id
-
-
-        }, {
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem('token')}`
+            if (response.status === 200) {
+                navigate('/captain-home')
             }
-        })
-
-        if (response.status === 200) {
+        } catch (error) {
+            console.error('Error ending ride:', error)
+            // Still redirect to home even if there's an error
             navigate('/captain-home')
         }
-
     }
 
     return (
