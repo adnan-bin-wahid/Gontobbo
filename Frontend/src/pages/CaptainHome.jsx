@@ -35,6 +35,10 @@ const CaptainHome = () => {
         const updateLocation = () => {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(position => {
+                    console.log('Captain location:', {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    });
 
                     socket.emit('update-location-captain', {
                         userId: captain._id,
@@ -43,7 +47,13 @@ const CaptainHome = () => {
                             lng: position.coords.longitude
                         }
                     })
+                }, (error) => {
+                    console.error('Geolocation error:', error);
+                    alert('Please enable location services to receive ride requests');
                 })
+            } else {
+                console.error('Geolocation is not supported by this browser');
+                alert('Geolocation is not supported by your browser');
             }
         }
 
