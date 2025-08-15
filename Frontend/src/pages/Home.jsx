@@ -1,9 +1,9 @@
 import React, { useRef, useEffect, useContext } from 'react'
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import {useGSAP} from '@gsap/react';
-import { gsap } from 'gsap';
-import 'remixicon/fonts/remixicon.css'
+ import { useState } from 'react'
+ import { useNavigate } from 'react-router-dom'
+ import {useGSAP} from '@gsap/react';
+ import { gsap } from 'gsap';
+ import 'remixicon/fonts/remixicon.css'
 import LocationSearchPanel from '../components/LocationSearchPanel';
 import { VehiclePanel } from '../components/VehiclePanel';
 import { ConfirmedRide } from '../components/ConfirmedRide';
@@ -13,7 +13,6 @@ import axios from 'axios';
 import { UserDataContext } from '../context/UserContext';
 import { SocketContext } from '../context/SocketContext';
 import LiveTracking from '../components/LiveTracking';
-import NewGontobboLogo from '../assets/Gontobbo.png';
 
 const Home = () => {
   const [pickup, setPickup] = useState('')
@@ -74,6 +73,7 @@ const Home = () => {
       socket.off('ride-started', handleRideStarted)
     }
   }, [user, socket, navigate]);
+
 
   const fetchSuggestions = async (input, field) => {
     if (input.length < 3) {
@@ -150,12 +150,13 @@ const Home = () => {
     gsap.to(panelRef.current,{
       height:'0%',
       padding:24
-      // opacity:ස
+      // opacity:0
     })
     gsap.to(panelCloseRef.current,{
       opacity:0
     })
    }
+
   },[panelOpen]);
   
   useGSAP(function(){
@@ -334,7 +335,7 @@ const Home = () => {
 
   return (
     <div className='h-screen relative overflow-hidden'>
-      <img className='w-28 absolute left-5 top-5' src={NewGontobboLogo} alt="New Gontobbo logo" />
+      <img className='w-16 absolute left-5 top-5' src="https://www.pngplay.com/wp-content/uploads/8/Uber-Transparent-Background.png" alt="Ubar logo" />
       <div className='h-screen w-screen'>
        <LiveTracking/>
       </div>
@@ -394,14 +395,12 @@ const Home = () => {
         </div>
       </div>
       <div ref={vehiclePanelRef} className='fixed w-full z-10 bottom-0 translate-y-full bg-white px-3 py-10 pt-14'>
-        <div className='w-16 absolute left-5 top-5' >
         <VehiclePanel 
           fare={fare} 
           selectVehicle={setVehicleType}
           setConfirmRidePanel={setConfirmRidePanel} 
           setVehiclePanel={setVehiclePanel}
         />
-        </div>
       </div>
        <div ref={confirmRidePanelRef} className='fixed w-full z-10 bottom-0 translate-y-full bg-white px-3 py-6 pt-12'>
          <ConfirmedRide 
