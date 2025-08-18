@@ -1,5 +1,7 @@
 # Gontobbo
 
+![App Screenshot](./Frontend/public/ss.png)
+
 A full-stack ride-sharing application built with React and Node.js, featuring real-time location tracking, user authentication, and Google Maps integration.
 
 ## 🚀 Features
