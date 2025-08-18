@@ -9,6 +9,7 @@ const userRoutes = require('./routes/user.routes');
 const captainRoutes = require('./routes/captain.routes');
 const mapsRoutes = require('./routes/maps.routes');
 const rideRoutes = require('./routes/ride.routes');
+const paymentRoutes = require('./routes/payment.routes');
 const socketTestRoutes = require('./routes/socket-test.routes');
 const debugRoutes = require('./routes/debug.routes');
 
@@ -28,6 +29,7 @@ app.use('/users', userRoutes);
 app.use('/captains', captainRoutes);
 app.use('/maps', mapsRoutes);
 app.use('/rides', rideRoutes);
+app.use('/payment', paymentRoutes);
 app.use('/socket-test', socketTestRoutes);
 app.use('/debug', debugRoutes);
 

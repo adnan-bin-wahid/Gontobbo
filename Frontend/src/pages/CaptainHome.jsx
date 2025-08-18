@@ -4,6 +4,7 @@ import CaptainDetails from '../components/CaptainDetails'
 import RidePopUp from '../components/RidePopUp'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
+import Gontobbologo from '../assets/logo.png' // Assuming you have a logo image in your assets
 import ConfirmRidePopUp from '../components/ConfirmRidePopUp'
 import { useEffect, useContext } from 'react'
 import { SocketContext } from '../context/SocketContext'
@@ -35,6 +36,10 @@ const CaptainHome = () => {
         const updateLocation = () => {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(position => {
+                    console.log('Captain location:', {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    });
 
                     socket.emit('update-location-captain', {
                         userId: captain._id,
@@ -43,7 +48,13 @@ const CaptainHome = () => {
                             lng: position.coords.longitude
                         }
                     })
+                }, (error) => {
+                    console.error('Geolocation error:', error);
+                    alert('Please enable location services to receive ride requests');
                 })
+            } else {
+                console.error('Geolocation is not supported by this browser');
+                alert('Geolocation is not supported by your browser');
             }
         }
 
@@ -115,7 +126,7 @@ const CaptainHome = () => {
     return (
         <div className='h-screen'>
             <div className='fixed p-6 top-0 flex items-center justify-between w-screen'>
-                <img className='w-16' src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png" alt="" />
+                <img className='w-28' src={Gontobbologo} alt="Gontobbo logo" />
                 <Link to='/captain-home' className=' h-10 w-10 bg-white flex items-center justify-center rounded-full'>
                     <i className="text-lg font-medium ri-logout-box-r-line"></i>
                 </Link>

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { UserDataContext } from '../context/UserContext'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
-
+import Gontobbologo from '../assets/logo.png'
 const UserLogin = () => {
   const [ email, setEmail ] = useState('')
   const [ password, setPassword ] = useState('')
@@ -22,24 +22,28 @@ const UserLogin = () => {
       password: password
     }
 
-    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/login`, userData)
+    try {
+      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/login`, userData)
 
-    if (response.status === 200) {
-      const data = response.data
-      setUser(data.user)
-      localStorage.setItem('token', data.token)
-      navigate('/home')
+      if (response.status === 200) {
+        const data = response.data
+        setUser(data.user)
+        localStorage.setItem('token', data.token)
+        navigate('/home')
+      }
+
+      setEmail('')
+      setPassword('')
+    } catch (error) {
+      console.error('Login error:', error.response?.data || error.message)
+      alert(error.response?.data?.message || 'Invalid email or password')
     }
-
-
-    setEmail('')
-    setPassword('')
   }
 
   return (
     <div className='p-7 h-screen flex flex-col justify-between'>
       <div>
-        <img className='w-16 mb-10' src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQYQy-OIkA6In0fTvVwZADPmFFibjmszu2A0g&s" alt="" />
+        <img className='w-18 mb-10' src={Gontobbologo} alt="Gontobbo logo" />
 
         <form onSubmit={(e) => {
           submitHandler(e)
