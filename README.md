@@ -1,6 +1,6 @@
 # Gontobbo
 
-![App Screenshot](./Frontend/public/ss.png)
+![App Screenshot](./Frontend/public/gontobbo.png)
 
 A full-stack ride-sharing application built with React and Node.js, featuring real-time location tracking, user authentication, and Google Maps integration.
 
@@ -12,6 +12,34 @@ A full-stack ride-sharing application built with React and Node.js, featuring re
 - **JWT Authentication**: Secure token-based authentication
 - **Responsive Design**: Modern UI built with React and Tailwind CSS
 - **MongoDB Database**: Robust data storage and management
+
+## 🖥️ Demo of Some Features
+
+### Login Feature
+Showcases the secure login process for users and captains.
+
+![Login](./Frontend/public/login.png)
+
+### Suggested Location
+Nearest locations will be suggested based on the provided location.
+
+![Suggested Location](./Frontend/public/location.png)
+
+### Fare Calculate Module
+Fare will be calculated based on location and estimated travel time.
+
+![Fare Calculation](./Frontend/public/fare.png)
+
+### Ride Module
+Driver will get notified about new rides based on driver's real-time location tracking. Driver's location is continuously tracked.
+
+![Ride Notification](./Frontend/public/ride.png)
+
+![Driver Tracking](./Frontend/public/driver-track.png)
+
+### Payment Module
+After completing the ride, the customer needs to pay the desired amount via Stripe Payment module.
+![Payment](./Frontend/public/payment.png)
 
 ## 🛠️ Tech Stack
 
